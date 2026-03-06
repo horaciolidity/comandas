@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import TicketPrinter from './TicketPrinter';
 
 export default function KitchenDashboard() {
     const allOrders = useOrderStore((state) => state.orders);
@@ -103,12 +104,15 @@ export default function KitchenDashboard() {
                                         <span className="text-[10px] font-black text-white/50 uppercase tracking-widest">ORDEN #{order.id.slice(0, 4)}</span>
                                         <h4 className="text-4xl font-black text-white tracking-tighter">MESA {order.tableNumber}</h4>
                                     </div>
-                                    <div className="flex flex-col items-end">
-                                        <div className="flex items-center gap-2 px-3 py-1 bg-black/50 rounded-full text-[10px] font-black text-brand-yellow uppercase mb-2">
-                                            <Timer className="w-3 h-3" />
-                                            {formatDistanceToNow(new Date(order.createdAt), { locale: es })}
+                                    <div className="flex flex-col items-end gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <TicketPrinter order={order} />
+                                            <div className="flex items-center gap-2 px-3 py-1 bg-black/50 rounded-full text-[10px] font-black text-brand-yellow uppercase">
+                                                <Timer className="w-3 h-3" />
+                                                {formatDistanceToNow(new Date(order.createdAt), { locale: es })}
+                                            </div>
                                         </div>
-                                        <span className={cn("text-[9px] font-black uppercase tracking-widest", meta.color)}>{meta.label}</span>
+                                        <span className={cn("text-[8px] font-black uppercase tracking-widest", meta.color)}>{meta.label}</span>
                                     </div>
                                 </div>
 
