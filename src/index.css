@@ -9,6 +9,11 @@
   --color-surface-3: #2A2A2A;
   --color-accent-blue: #007AFF;
   --color-accent-green: #34C759;
+
+  --shadow-pos-yellow: 0 4px 15px rgba(255, 188, 13, 0.3);
+  --shadow-pos-yellow-hover: 0 8px 25px rgba(255, 188, 13, 0.4);
+  --shadow-pos-red: 0 4px 15px rgba(219, 0, 7, 0.3);
+  --shadow-pos-red-hover: 0 8px 25px rgba(219, 0, 7, 0.4);
 }
 
 :root {
@@ -104,9 +109,9 @@ body {
 }
 
 .pos-btn-yellow {
-  @apply bg-brand-yellow text-black shadow-[0_4px_15px_rgba(255, 188, 13, 0.3)] hover:shadow-[0_8px_25px_rgba(255, 188, 13, 0.4)];
+  @apply bg-brand-yellow text-black shadow-pos-yellow hover:shadow-pos-yellow-hover;
 }
 
 .pos-btn-red {
-  @apply bg-brand-red text-white shadow-[0_4px_15px_rgba(219, 0, 7, 0.3)] hover:shadow-[0_8px_25px_rgba(219, 0, 7, 0.4)];
+  @apply bg-brand-red text-white shadow-pos-red hover:shadow-pos-red-hover;
 }
