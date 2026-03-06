@@ -9,7 +9,8 @@ import {
   Settings,
   UserCircle,
   LogOut,
-  Bell
+  Bell,
+  Store
 } from 'lucide-react';
 import { cn } from './lib/utils';
 
@@ -22,7 +23,7 @@ export default function App() {
       className={cn(
         "flex flex-col lg:flex-row items-center gap-2 lg:gap-4 px-4 py-3 lg:px-6 lg:py-4 rounded-3xl transition-all duration-300 group",
         view === id
-          ? `bg-surface-3 lg:${activeColor} text-white`
+          ? `bg - surface - 3 lg:${activeColor} text - white`
           : "text-zinc-500 hover:text-white"
       )}
     >
@@ -43,8 +44,8 @@ export default function App() {
       {/* PC Side Navigation */}
       <aside className="hidden lg:flex flex-col w-[280px] bg-surface-1 border-r border-white/5 p-6 shrink-0">
         <div className="flex items-center gap-4 mb-12 px-2">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center rotate-3 shadow-xl">
-            <span className="text-2xl font-black text-black">F</span>
+          <div className="w-12 h-12 bg-zinc-900 border border-white/10 rounded-2xl flex items-center justify-center shadow-xl">
+            <Store className="w-7 h-7 text-brand-yellow" />
           </div>
           <div>
             <h1 className="text-xl font-black italic tracking-tighter uppercase leading-none">Fast<span className="text-brand-yellow">Resto</span></h1>
