@@ -16,6 +16,7 @@ import { cn } from './lib/utils';
 
 export default function App() {
   const [view, setView] = React.useState('waiter');
+  const [isDemoMode, setIsDemoMode] = React.useState(true);
 
   const NavItem = ({ id, icon: Icon, label, activeColor }) => (
     <button
@@ -39,7 +40,14 @@ export default function App() {
   );
 
   return (
-    <div className="h-screen w-screen bg-brand-dark overflow-hidden flex flex-col lg:flex-row font-sans">
+    <div className="h-screen w-screen bg-brand-dark overflow-hidden flex flex-col lg:flex-row font-sans relative">
+      
+      {/* Demo Banner */}
+      {isDemoMode && (
+        <div className="absolute top-0 left-0 right-0 h-6 bg-brand-red z-[100] flex items-center justify-center animate-blink pointer-events-none">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Modo Demo Activado</span>
+        </div>
+      )}
 
       {/* PC Side Navigation */}
       <aside className="hidden lg:flex flex-col w-[280px] bg-surface-1 border-r border-white/5 p-6 shrink-0">
@@ -60,9 +68,15 @@ export default function App() {
         </nav>
 
         <div className="mt-auto pt-6 border-t border-white/5 flex flex-col gap-2">
-          <button className="flex items-center gap-4 px-6 py-4 rounded-3xl text-zinc-500 hover:text-white hover:bg-surface-2 transition-all">
+          <button 
+            onClick={() => setIsDemoMode(!isDemoMode)}
+            className={cn(
+              "flex items-center gap-4 px-6 py-4 rounded-3xl transition-all",
+              isDemoMode ? "text-brand-yellow bg-brand-yellow/10" : "text-zinc-500 hover:text-white hover:bg-surface-2"
+            )}
+          >
             <Settings className="w-5 h-5" />
-            <span className="text-xs font-black uppercase tracking-widest">Config</span>
+            <span className="text-xs font-black uppercase tracking-widest">{isDemoMode ? 'Demo ON' : 'Demo OFF'}</span>
           </button>
           <div className="bg-surface-2 p-4 rounded-[2rem] flex items-center justify-between border border-white/5">
             <div className="flex items-center gap-3">
@@ -131,9 +145,12 @@ export default function App() {
           <BarChart3 className="w-6 h-6" />
           <span className="text-[8px] font-black uppercase">Stats</span>
         </button>
-        <button className="flex-1 flex flex-col items-center gap-1 text-zinc-600">
+        <button 
+          onClick={() => setIsDemoMode(!isDemoMode)}
+          className={cn("flex-1 flex flex-col items-center gap-1", isDemoMode ? "text-brand-yellow" : "text-zinc-600")}
+        >
           <Settings className="w-6 h-6" />
-          <span className="text-[8px] font-black uppercase">Admin</span>
+          <span className="text-[8px] font-black uppercase">Demo: {isDemoMode ? 'ON' : 'OFF'}</span>
         </button>
       </nav>
 

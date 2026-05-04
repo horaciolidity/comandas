@@ -17,6 +17,21 @@ import { es } from 'date-fns/locale';
 
 export default function AdminDashboard() {
     const history = useOrderStore((state) => state.history);
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [isExporting, setIsExporting] = React.useState(false);
+
+    const filteredHistory = history.filter(order => 
+        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.tableNumber.toString().includes(searchTerm)
+    );
+
+    const handleExport = () => {
+        setIsExporting(true);
+        setTimeout(() => {
+            setIsExporting(false);
+            alert('Reporte exportado correctamente (Demo)');
+        }, 1500);
+    };
 
     const totalSales = history.reduce((acc, o) => acc + o.total, 0);
     const totalOrders = history.length;
@@ -60,8 +75,22 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-between px-2">
                         <h3 className="text-2xl font-black italic uppercase tracking-tighter">Historial de <span className="text-brand-yellow">Caja</span></h3>
                         <div className="flex gap-3">
-                            <button className="p-3 bg-surface-2 rounded-xl text-zinc-500 hover:text-white"><Filter className="w-5 h-5" /></button>
-                            <button className="p-3 bg-surface-2 rounded-xl text-zinc-500 hover:text-white"><Download className="w-5 h-5" /></button>
+                            <div className="relative group">
+                                <Filter className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-brand-yellow transition-colors" />
+                                <input 
+                                    type="text" 
+                                    placeholder="Buscar ID o Mesa..."
+                                    className="h-12 bg-surface-2 rounded-xl pl-12 pr-4 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-brand-yellow/20 w-48 lg:w-64 transition-all"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                            <button 
+                                onClick={handleExport}
+                                className="p-3 bg-surface-2 rounded-xl text-zinc-500 hover:text-white transition-colors"
+                            >
+                                <Download className="w-5 h-5" />
+                            </button>
                         </div>
                     </div>
 
@@ -76,10 +105,10 @@ export default function AdminDashboard() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
-                                {history.length === 0 ? (
-                                    <tr><td colSpan="4" className="px-10 py-24 text-center text-zinc-600 font-bold uppercase italic tracking-widest text-sm opacity-20">No se registran ventas</td></tr>
+                                {filteredHistory.length === 0 ? (
+                                    <tr><td colSpan="4" className="px-10 py-24 text-center text-zinc-600 font-bold uppercase italic tracking-widest text-sm opacity-20">No se encontraron resultados</td></tr>
                                 ) : (
-                                    [...history].reverse().map(order => (
+                                    [...filteredHistory].reverse().map(order => (
                                         <tr key={order.id} className="hover:bg-white/[0.02] transition-colors cursor-pointer group">
                                             <td className="px-10 py-8">
                                                 <div className="flex items-center gap-4">
@@ -146,8 +175,15 @@ export default function AdminDashboard() {
                         </div>
 
                         <div className="pt-8 border-t border-white/5">
-                            <button className="pos-btn w-full h-16 rounded-2xl bg-zinc-900 border border-white/5 text-zinc-500 hover:text-white hover:border-white/20">
-                                Exportar Reporte Mensual
+                            <button 
+                                onClick={handleExport}
+                                disabled={isExporting}
+                                className={cn(
+                                    "pos-btn w-full h-16 rounded-2xl bg-zinc-900 border border-white/5 text-zinc-500 hover:text-white hover:border-white/20",
+                                    isExporting && "opacity-50 cursor-wait"
+                                )}
+                            >
+                                {isExporting ? 'Generando...' : 'Exportar Reporte Mensual'}
                             </button>
                         </div>
                     </div>

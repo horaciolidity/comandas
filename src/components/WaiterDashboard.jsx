@@ -30,10 +30,13 @@ export default function WaiterDashboard() {
     const [currentOrder, setCurrentOrder] = React.useState([]);
     const [tableNum, setTableNum] = React.useState('');
     const [showMobileCart, setShowMobileCart] = React.useState(false);
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [isSending, setIsSending] = React.useState(false);
 
     const addOrder = useOrderStore((state) => state.addOrder);
 
-    const filtered = activeCat === 'Todos' ? MENU_ITEMS : MENU_ITEMS.filter(i => i.cat === activeCat);
+    const filtered = (activeCat === 'Todos' ? MENU_ITEMS : MENU_ITEMS.filter(i => i.cat === activeCat))
+        .filter(i => i.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const updateQty = (item, delta) => {
         setCurrentOrder(curr => {
@@ -47,10 +50,20 @@ export default function WaiterDashboard() {
 
     const handleSend = () => {
         if (!tableNum || currentOrder.length === 0) return;
-        addOrder(currentOrder, tableNum);
-        setCurrentOrder([]);
-        setTableNum('');
-        setShowMobileCart(false);
+        setIsSending(true);
+        setTimeout(() => {
+            addOrder(currentOrder, tableNum);
+            setCurrentOrder([]);
+            setTableNum('');
+            setShowMobileCart(false);
+            setIsSending(false);
+        }, 800);
+    };
+
+    const clearOrder = () => {
+        if (confirm('¿Vaciar pedido actual?')) {
+            setCurrentOrder([]);
+        }
     };
 
     return (
@@ -75,6 +88,16 @@ export default function WaiterDashboard() {
                             {c}
                         </button>
                     ))}
+                    <div className="flex-1 lg:ml-6 relative">
+                        <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
+                        <input 
+                            type="text" 
+                            placeholder="Buscar producto..."
+                            className="w-full bg-surface-2 rounded-2xl h-12 pl-12 pr-4 text-[10px] font-black uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-brand-yellow/20"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
                 </div>
 
                 {/* Product Grid */}
@@ -128,7 +151,13 @@ export default function WaiterDashboard() {
                         </div>
                         <h3 className="text-xl font-black uppercase italic">Estado</h3>
                     </div>
-                    <div className="bg-zinc-900 border border-white/10 rounded-2xl p-2 flex items-center gap-3">
+                    <div className="flex items-center gap-3">
+                        <button 
+                            onClick={() => setTableNum('')}
+                            className="text-[10px] font-black text-zinc-600 hover:text-brand-red uppercase px-2"
+                        >
+                            Limpiar
+                        </button>
                         <span className="text-[10px] font-black text-zinc-500 uppercase px-2">Mesa</span>
                         <input
                             type="number"
@@ -169,16 +198,25 @@ export default function WaiterDashboard() {
                         <span className="text-5xl font-black italic tracking-tighter text-brand-yellow">${totals.toFixed(2)}</span>
                     </div>
                     <button
-                        disabled={!tableNum || currentOrder.length === 0}
+                        disabled={!tableNum || currentOrder.length === 0 || isSending}
                         onClick={handleSend}
                         className={cn(
-                            "pos-btn w-full h-20 rounded-[1.5rem] !text-lg",
-                            tableNum && currentOrder.length > 0 ? "pos-btn-yellow" : "bg-surface-3 text-zinc-600 grayscale"
+                            "pos-btn w-full h-20 rounded-[1.5rem] !text-lg transition-all",
+                            tableNum && currentOrder.length > 0 && !isSending ? "pos-btn-yellow" : "bg-surface-3 text-zinc-600 grayscale",
+                            isSending && "animate-pulse"
                         )}
                     >
-                        Mandar a Cocina
-                        <ChevronRight className="w-6 h-6 ml-2" />
+                        {isSending ? 'Enviando...' : 'Mandar a Cocina'}
+                        {!isSending && <ChevronRight className="w-6 h-6 ml-2" />}
                     </button>
+                    {currentOrder.length > 0 && (
+                        <button 
+                            onClick={clearOrder}
+                            className="w-full text-[10px] font-black uppercase text-zinc-600 hover:text-brand-red tracking-widest pt-2"
+                        >
+                            Vaciar Pedido
+                        </button>
+                    )}
                 </div>
             </div>
 
