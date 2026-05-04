@@ -76,7 +76,6 @@ body {
     transform: translateY(100%);
     opacity: 0;
   }
-
   to {
     transform: translateY(0);
     opacity: 1;
@@ -88,11 +87,16 @@ body {
     transform: scale(0.98);
     opacity: 0;
   }
-
   to {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
 }
 
 .animate-pos-in {
@@ -103,25 +107,41 @@ body {
   animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Button States */
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+/* Button States - Reemplazando @apply por CSS estándar para evitar warnings */
 .pos-btn {
-  @apply font-black uppercase tracking-widest flex items-center justify-center transition-all duration-200 active:scale-95;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.pos-btn:active {
+  transform: scale(0.95);
 }
 
 .pos-btn-yellow {
-  @apply bg-brand-yellow text-black shadow-pos-yellow hover:shadow-pos-yellow-hover;
+  background-color: var(--color-brand-yellow);
+  color: black;
+  box-shadow: var(--shadow-pos-yellow);
+}
+
+.pos-btn-yellow:hover {
+  box-shadow: var(--shadow-pos-yellow-hover);
 }
 
 .pos-btn-red {
-  @apply bg-brand-red text-white shadow-pos-red hover:shadow-pos-red-hover;
+  background-color: var(--color-brand-red);
+  color: white;
+  box-shadow: var(--shadow-pos-red);
 }
 
-@keyframes blink {
-  0% { opacity: 1; }
-  50% { opacity: 0.3; }
-  100% { opacity: 1; }
-}
-
-.animate-blink {
-  animation: blink 1s infinite;
+.pos-btn-red:hover {
+  box-shadow: var(--shadow-pos-red-hover);
 }
